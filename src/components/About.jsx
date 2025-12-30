@@ -13,7 +13,7 @@ const About = React.forwardRef((props, ref) => {
           </p>
           <img src={heroimg} alt="Icon" />
           <a
-            href="https://drive.google.com/file/d/1-UUwj1F-O_kJUPCCccDLpO-DfD3YAaU7/view?usp=drive_link"
+            href="https://drive.google.com/file/d/17z4gVO0biGkFd9zQInUY0B0P559PMO2Y/view?usp=drive_link"
             target="_blank"
             rel="noopener noreferrer"
           >
