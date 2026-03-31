@@ -21,6 +21,17 @@ const Projects = React.forwardRef((props, ref) => {
   const projects = [
     {
       id: 1,
+      title: "Stayhub",
+      techused: [nodejs, expressjs, mongodb, mapbox],
+      description: [
+        "A full-stack Airbnb-style application built with Node.js, Express, MongoDB, and EJS, featuring secure authentication with Passport, image uploads via Cloudinary, location services using Mapbox, and full CRUD functionality with reviews and filters.",
+      ],
+      imageUrl: stayhub,
+      link: "https://stayhub-gg84.onrender.com",
+      github: "https://github.com/rayankita1810/stayhub",
+    },
+    {
+      id: 2,
       title: "Memory Game",
       techused: [html, css, js],
       description: [
@@ -30,9 +41,21 @@ const Projects = React.forwardRef((props, ref) => {
       link: "https://memory-game-4h17.onrender.com/",
       github: "https://github.com/rayankita1810/memory-game",
     },
-  
     {
-      id: 2,
+      id: 3,
+      title: "Text Utils",
+      techused: [react, tailwind],
+      description: [
+        "Explore a versatile text utility app, crafted with Tailwind CSS and React. Effortlessly transform text cases, encode/decode in Base64, execute search and replace, and enjoy convenient copy-paste functionalities. Experience instant text-to-speech functionality!",
+      ],
+
+      imageUrl: textutils,
+      link: "https://textutils-kolg.onrender.com/",
+      github: "https://github.com/rayankita1810/textutils",
+    },
+
+    {
+      id: 4,
       title: "Crud App",
       techused: [react, tailwind],
       description: [
@@ -42,8 +65,9 @@ const Projects = React.forwardRef((props, ref) => {
       link: "https://crud-app-tinj.onrender.com/",
       github: "https://github.com/rayankita1810/crud-app",
     },
+
     {
-      id: 3,
+      id: 5,
       title: "Survey Form",
       techused: [react, tailwind, appscript],
       description: [
@@ -64,20 +88,9 @@ const Projects = React.forwardRef((props, ref) => {
       link: "https://survey-form-3gia.onrender.com/",
       github: "https://github.com/rayankita1810/survey-form",
     },
-    {
-      id: 4,
-      title: "Text Utils",
-      techused: [react, tailwind],
-      description: [
-        "Explore a versatile text utility app, crafted with Tailwind CSS and React. Effortlessly transform text cases, encode/decode in Base64, execute search and replace, and enjoy convenient copy-paste functionalities. Experience instant text-to-speech functionality!",
-      ],
 
-      imageUrl: textutils,
-      link: "https://textutils-kolg.onrender.com/",
-      github: "https://github.com/rayankita1810/textutils",
-    },
     {
-      id: 5,
+      id: 6,
       title: "Gourmet au Catering",
       techused: [html, css],
       description: [
@@ -89,7 +102,7 @@ const Projects = React.forwardRef((props, ref) => {
       github: "https://github.com/rayankita1810/cafe",
     },
     {
-      id: 6,
+      id: 7,
       title: "Calculator",
       techused: [html, css, js],
       description: [
@@ -98,17 +111,6 @@ const Projects = React.forwardRef((props, ref) => {
       imageUrl: calculator,
       link: "https://calculator-72ld.onrender.com/",
       github: "https://github.com/rayankita1810/calculator",
-    },
-    {
-      id: 7,
-      title: "Stayhub",
-      techused: [nodejs, expressjs, mongodb, mapbox],
-      description: [
-        "A full-stack Airbnb-style application built with Node.js, Express, MongoDB, and EJS, featuring secure authentication with Passport, image uploads via Cloudinary, location services using Mapbox, and full CRUD functionality with reviews and filters.",
-      ],
-      imageUrl: stayhub,
-      link: "https://stayhub-gg84.onrender.com",
-      github: "https://github.com/rayankita1810/stayhub",
     },
   ];
   function handleDemo(link) {
@@ -136,54 +138,60 @@ const Projects = React.forwardRef((props, ref) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 w-full gap-6 px-10 md:px-20 lg:px-40 -mt-20 mb-20">
         {projects.map((project) => (
           <div
-            key={project.id}
-            className="col-span-1 project-slide bg-white rounded-xl shadow-md hover:shadow-lg transition duration-500 p-6 md:p-10"
-          >
-            <div className="relative overflow-hidden rounded-lg">
-              <img
-                src={project.imageUrl}
-                alt={project.title}
-                className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div className="pt-10">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">{project.title}</h2>
-                <div className="flex items-center justify-center gap-2 my-4">
-                  {Array.isArray(project.techused) ? (
-                    project.techused.map((item, index) => (
-                      <img
-                        key={index}
-                        src={item}
-                        alt="technology used"
-                        className="w-10"
-                      />
-                    ))
-                  ) : (
-                    <li>{project.techused}</li>
-                  )}
-                </div>
-              </div>
+  key={project.id}
+  // Added 'flex flex-col' to the card container
+  className="col-span-1 project-slide bg-white rounded-xl shadow-md hover:shadow-lg transition duration-500 p-6 md:p-10 flex flex-col"
+>
+  <div className="relative overflow-hidden rounded-lg">
+    <img
+      src={project.imageUrl}
+      alt={project.title}
+      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+    />
+  </div>
+  
+  {/* Wrap the content below the image in a div that also grows */}
+  <div className="pt-10 flex flex-col flex-grow">
+    <div className="flex items-center justify-between">
+      <h2 className="text-2xl font-semibold">{project.title}</h2>
+      <div className="flex items-center justify-center gap-2 my-4">
+        {Array.isArray(project.techused) ? (
+          project.techused.map((item, index) => (
+            <img
+              key={index}
+              src={item}
+              alt="technology used"
+              className="w-10"
+            />
+          ))
+        ) : (
+          <li>{project.techused}</li>
+        )}
+      </div>
+    </div>
 
-              <p className="text-gray-800 text-lg my-4">
-                {project.description}
-              </p>
-              <div className="flex gap-4 text-sm xl:text-lg">
-                <button
-                  onClick={() => handleDemo(project.link)}
-                  className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-4 rounded-full w-32 sm:w-40 whitespace-nowrap xl:whitespace-normal"
-                >
-                  See Demo
-                </button>
-                <button
-                  onClick={() => handleDemo(project.github)}
-                  className="bg-gray-700 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-full w-32 sm:w-40 whitespace-nowrap xl:whitespace-normal"
-                >
-                  GitHub Code
-                </button>
-              </div>
-            </div>
-          </div>
+    {/* Added 'flex-grow' here to push the buttons down */}
+    <p className="text-gray-800 text-lg my-4 flex-grow">
+      {project.description}
+    </p>
+
+    {/* This will now always sit at the very bottom of the card */}
+    <div className="flex gap-4 text-sm xl:text-lg mt-auto">
+      <button
+        onClick={() => handleDemo(project.link)}
+        className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-4 rounded-full w-32 sm:w-40 whitespace-nowrap xl:whitespace-normal"
+      >
+        See Demo
+      </button>
+      <button
+        onClick={() => handleDemo(project.github)}
+        className="bg-gray-700 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-full w-32 sm:w-40 whitespace-nowrap xl:whitespace-normal"
+      >
+        GitHub Code
+      </button>
+    </div>
+  </div>
+</div>
         ))}
       </div>
     </>
