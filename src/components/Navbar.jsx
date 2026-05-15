@@ -2,113 +2,179 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Hamburger from "hamburger-react";
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 const Navbar = ({
-  // eslint-disable-next-line react/prop-types
-  aboutScroll,skillsScroll,experienceScroll,projectsScroll,
+  aboutScroll,
+  skillsScroll,
+  experienceScroll,
+  projectsScroll,
 }) => {
   const navigate = useNavigate();
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 0);
-  };
 
+  const [isOpen, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Dark Mode State
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  // Scroll Effect
   useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
     window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const [isOpen, setOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Apply Dark Mode
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
   const handleClick = () => {
     navigate("/contact");
+    setOpen(false);
   };
+
+  const navLinks = [
+    { name: "About", action: aboutScroll },
+    { name: "Skills", action: skillsScroll },
+    { name: "Experience", action: experienceScroll },
+    { name: "Projects", action: projectsScroll },
+  ];
 
   return (
     <>
+      {/* ================= MOBILE NAVBAR ================= */}
       <div
-        className={`flex bg-white text-teal-500 items-center justify-between w-full px-4 py-2 z-40 top-0 fixed md:hidden
-      ${
-        isScrolled
-          ? "bg-white shadow-md transform ease-in duration-200 translate-y-0"
-          : ""
-      }`}
-      >
-        <a href="/">
-          <img src={logo} alt="Logo" className="w-14" />
-        </a>
-        <Hamburger toggled={isOpen} toggle={setOpen} />
-      </div>
-      <nav
-        className={`hidden md:flex font-roboto-slab text-xl bg-white text-teal-600 items-center justify-between w-full px-10 py-2 z-50 top-0 fixed ${
+        className={`fixed top-0 left-0 w-full z-50 md:hidden transition-all duration-300
+        ${
           isScrolled
-            ? "bg-white shadow-md transform ease-in duration-500 translate-y-0"
-            : ""
+            ? "bg-white/90 dark:bg-gray-900/90 shadow-lg backdrop-blur-md"
+            : "bg-white dark:bg-gray-900"
         }`}
       >
-        <ul className="flex items-center justify-center gap-10 cursor-pointer">
+        <div className="flex items-center justify-between px-5 py-3">
+          {/* Logo */}
           <a href="/">
             <img src={logo} alt="Logo" className="w-14" />
           </a>
-          <li onClick={aboutScroll}>About</li>
-          <li onClick={skillsScroll}>Skills</li>
-          <li onClick={experienceScroll}>Experience</li>
-          <li onClick={projectsScroll}>Projects</li>
-        </ul>
-        <button
-          className="border-2 rounded-full px-3 border-teal-600 hover:bg-teal-500 hover:text-white transition duration-300"
-          onClick={handleClick}
-        >
-          Say Hello
-        </button>
-      </nav>
-      {/* Drawer */}
-      <div
-        className={`bg-white text-teal-500 text-xl fixed top-16 left-0 w-full z-50 shadow-md ${
-          isOpen ? "block" : "hidden"
+
+          {/* Right Side */}
+          <div className="flex items-center gap-3">
+            {/* Dark Mode Button */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-full bg-teal-100 dark:bg-gray-800 text-teal-600 dark:text-yellow-400 transition duration-300 hover:scale-110"
+            >
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            {/* Hamburger */}
+            <Hamburger
+              toggled={isOpen}
+              toggle={setOpen}
+              color={darkMode ? "#ffffff" : "#0f766e"}
+              size={24}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ================= DESKTOP NAVBAR ================= */}
+      <nav
+        className={`hidden md:flex fixed top-0 left-0 w-full z-50 items-center justify-between px-10 lg:px-16 py-4 transition-all duration-300
+        ${
+          isScrolled
+            ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg"
+            : "bg-transparent"
         }`}
       >
-        <ul className="ml-12 my-6">
-          <li
-            className="py-2"
-            onClick={() => {
-              aboutScroll();
-              setOpen(false);
-            }}
-          >
-            About
-          </li>
-          <li
-            className="py-2"
-            onClick={() => {
-              skillsScroll();
-              setOpen(false);
-            }}
-          >
-            Skills
-          </li>
-          <li
-            className="py-2"
-            onClick={() => {
-              experienceScroll();
-              setOpen(false);
-            }}
-          >
-            Experience
-          </li>
-          <li
-            className="py-2"
-            onClick={() => {
-              projectsScroll();
-              setOpen(false);
-            }}
-          >
-            Projects
-          </li>
-          <li className="py-2" onClick={handleClick}>
-            Contact
-          </li>
+        {/* Logo */}
+        <a href="/">
+          <img src={logo} alt="Logo" className="w-16" />
+        </a>
+
+        {/* Nav Links */}
+        <ul className="flex items-center gap-10 text-lg font-semibold">
+          {navLinks.map((link, index) => (
+            <li
+              key={index}
+              onClick={link.action}
+              className="relative cursor-pointer text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition duration-300
+              after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-teal-500 after:transition-all after:duration-300 hover:after:w-full"
+            >
+              {link.name}
+            </li>
+          ))}
         </ul>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-3 rounded-full bg-teal-100 dark:bg-gray-800 text-teal-600 dark:text-yellow-400 hover:scale-110 transition duration-300"
+          >
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          {/* Contact Button */}
+          <button
+            onClick={handleClick}
+            className="px-6 py-2 rounded-full border-2 border-teal-500 text-teal-500 dark:text-teal-400 font-semibold hover:bg-teal-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg"
+          >
+            Say Hello
+          </button>
+        </div>
+      </nav>
+
+      {/* ================= MOBILE DRAWER ================= */}
+      <div
+        className={`fixed top-[72px] left-0 w-full z-40 md:hidden transition-all duration-300
+        ${
+          isOpen
+            ? "opacity-100 visible translate-y-0"
+            : "opacity-0 invisible -translate-y-5"
+        }`}
+      >
+        <div className="mx-4 rounded-3xl bg-white dark:bg-gray-900 shadow-2xl dark:shadow-black/40 p-6">
+          <ul className="flex flex-col gap-5 text-lg font-medium">
+            {navLinks.map((link, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  link.action();
+                  setOpen(false);
+                }}
+                className="cursor-pointer text-gray-700 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400 transition duration-300"
+              >
+                {link.name}
+              </li>
+            ))}
+
+            {/* Contact */}
+            <button
+              onClick={handleClick}
+              className="mt-3 w-full rounded-full bg-teal-500 text-white py-3 font-semibold hover:bg-teal-600 transition duration-300"
+            >
+              Contact Me
+            </button>
+          </ul>
+        </div>
       </div>
     </>
   );

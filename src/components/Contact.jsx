@@ -7,9 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Contact = () => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/");
-  };
+  const [darkMode, setDarkMode] = useState(true);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,93 +16,159 @@ const Contact = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const response = await fetch("https://formspree.io/f/xqekoeak", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
+
     if (response.ok) {
       alert("Message sent successfully!");
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-      });
+      setFormData({ name: "", email: "", message: "" });
     } else {
       alert("Oops! Something went wrong. Please try again later.");
     }
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="flex items-center justify-between px-8 py-4">
-        <img src={logo} alt="Logo" className="w-14" />
-        <RiCloseLine
-          className="text-teal-500 cursor-pointer"
-          size={40}
-          onClick={handleClick}
-        />
+    <div
+      className={`min-h-screen transition-all duration-300 ${
+        darkMode ? "bg-[#0f172a] text-gray-200" : "bg-gray-50 text-gray-800"
+      }`}
+    >
+      {/* Top Bar */}
+      <div
+        className={`flex items-center justify-between px-6 md:px-12 py-5 border-b transition ${
+          darkMode ? "border-white/10" : "border-gray-200"
+        }`}
+      >
+        <img src={logo} alt="Logo" className="w-14 hover:scale-105 transition" />
+
+        <div className="flex items-center gap-3">
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`text-sm px-3 py-1 rounded-full border transition hover:scale-105 ${
+              darkMode
+                ? "border-white/20 text-white"
+                : "border-gray-300 text-gray-700"
+            }`}
+          >
+            {darkMode ? "☀️ Light" : "🌙 Dark"}
+          </button>
+
+          {/* Close Button */}
+          <RiCloseLine
+            className={`cursor-pointer hover:scale-110 transition ${
+              darkMode ? "text-teal-400" : "text-teal-600"
+            }`}
+            size={38}
+            onClick={() => navigate("/")}
+          />
+        </div>
       </div>
-      <div className="relative">
+
+      {/* Profile Divider */}
+      <div className="relative flex justify-center mt-6">
+        <div
+          className={`w-full border-t ${
+            darkMode ? "border-white/10" : "border-gray-200"
+          }`}
+        ></div>
+
         <img
           src={myimg}
-          alt="profile img"
-          className="rounded-full w-24 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          alt="profile"
+          className={`absolute -top-10 w-24 h-24 rounded-full border-4 shadow-xl object-cover ${
+            darkMode ? "border-[#0f172a]" : "border-white"
+          }`}
         />
-        <hr className="w-full border-t border-gray-200 my-2" />
       </div>
-      <div className="flex flex-col items-center justify-center text-center">
-        <h1 className="mt-20 text-4xl font-serif">Thanks for reaching out!</h1>
-        <h2 className="text-xl font-serif mt-4">How can I assist you today?</h2>
-        <form onSubmit={handleSubmit} className="mt-8 max-w-lg w-full px-4">
-          <div className="flex flex-col mb-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Name"
-              required
-              className="border border-gray-300 rounded-md py-2 px-4"
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <input
-              type="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="border border-gray-300 rounded-md py-2 px-4"
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="Message"
-              required
-              className="border border-gray-300 rounded-md py-2 px-4 resize-none h-32"
-            ></textarea>
-          </div>
+
+      {/* Content */}
+      <div className="flex flex-col items-center text-center mt-20 px-4">
+        <h1
+          className={`text-3xl md:text-4xl font-semibold ${
+            darkMode ? "text-white" : "text-gray-800"
+          }`}
+        >
+          Let’s Connect 🚀
+        </h1>
+
+        <p
+          className={`mt-3 max-w-md ${
+            darkMode ? "text-gray-400" : "text-gray-600"
+          }`}
+        >
+          Got an idea, project, or just want to say hi? I’d love to hear from you.
+        </p>
+
+        {/* Form Card */}
+        <form
+          onSubmit={handleSubmit}
+          className={`mt-10 w-full max-w-xl rounded-2xl p-6 md:p-8 space-y-4 shadow-xl border transition ${
+            darkMode
+              ? "bg-[#111827] border-white/10"
+              : "bg-white border-gray-200"
+          }`}
+        >
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Your Name"
+            required
+            className={`w-full rounded-lg px-4 py-3 outline-none transition border ${
+              darkMode
+                ? "bg-[#0f172a] border-white/10 text-white placeholder-gray-500 focus:border-teal-400"
+                : "bg-gray-50 border-gray-300 text-black placeholder-gray-400 focus:border-teal-500"
+            }`}
+          />
+
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Your Email"
+            required
+            className={`w-full rounded-lg px-4 py-3 outline-none transition border ${
+              darkMode
+                ? "bg-[#0f172a] border-white/10 text-white placeholder-gray-500 focus:border-teal-400"
+                : "bg-gray-50 border-gray-300 text-black placeholder-gray-400 focus:border-teal-500"
+            }`}
+          />
+
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Write your message..."
+            required
+            rows="5"
+            className={`w-full rounded-lg px-4 py-3 outline-none resize-none transition border ${
+              darkMode
+                ? "bg-[#0f172a] border-white/10 text-white placeholder-gray-500 focus:border-teal-400"
+                : "bg-gray-50 border-gray-300 text-black placeholder-gray-400 focus:border-teal-500"
+            }`}
+          />
+
           <button
             type="submit"
-            className="bg-teal-500 font-serif text-white text-xl shadow-lg font-bold py-2 px-4 rounded-full hover:bg-teal-600 transition duration-300"
+            className={`w-full font-semibold py-3 rounded-lg shadow-md transition hover:scale-[1.01] ${
+              darkMode
+                ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white hover:shadow-teal-500/20"
+                : "bg-teal-500 text-white hover:bg-teal-600"
+            }`}
           >
-            Sumbit
+            Send Message ✉️
           </button>
         </form>
       </div>
